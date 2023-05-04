@@ -1,0 +1,298 @@
+
+     Importing the libraries 
+
+#import necessary libraries
+import pandas as pd
+import numpy as np
+import pickle
+import matplotib.pyplot as plt
+%matplotlip inline
+import seaborn as sns
+import sklearn
+from sklearn.preprocessing import LabelEncoder,OneHotEncoder
+from sklearn.linear_ model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.model_selection import RandomizedSearchCV
+from imblearn
+from imblearn.over_sampling import SMOTE
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing inport StandardScaler
+from sklearn.metrics import accuracy_score,classification_report,confusion_matrix,f1_score
+
+    Read The Dataset
+
+#import dataset
+data=pd.read_csv(r"C:\Users\Shivani_SB\OneDrive\Desktop\Telecom churn modelling-updated\Dataset.csv")
+data
+
+   Handling Missing Values
+
+data.info()
+<class 'pandas.core.frame.DataFrame'>
+Ranges Index: 7043 entries,0 to 7042
+Data colums (total 20 columns):
+
+#checking for null values
+data.totalcharges=pd.to_numeric(data.TotalCharges,errors='coerce')
+data.isnull().any()
+
+data["TotalCharges"].fillna(data["TotalCharges"].median(),inplace=True)
+data.isnull().sum()
+
+    Handling Categorical Values
+
+from sklearn.preprocessing import labelEncoder
+le = LabelEncoder()
+data["gender"]=le.fit_transform(data["gender"])
+data["Partner"]= le.fit_transform(data["Partner"])
+data["Dependents"]=le.fit_transform(data["Dependents"])
+data["Phoneservice"]=le.fit_transform(data["PhoneService"])
+data["MultipleLines"]=le.fit_transform(data["MultipleLines"])
+data["InternetService"]=le.fit_transform(data["InternetService"])
+data["OnlineSecurity']=le.fit_transform(data["OnlineService"])
+data["OnlineBackup"]=le.fit_transform(data["OnlineBackup"])
+data["DeviceProtection"]=le.fit_transform(data["DeviceProtection"])
+data["TechSupport"]=le.fit_transform(data["TechSupport"])
+data["StreamingTV"]=le.fit_transform(data["StreamingTV"])
+data["StreamingMovies"]=le.fit_transform(data["StreamingMovies"])
+data["Contract"]=le.fit_transform(data["PaperlessBilling"])
+data["PaymentMethod"]=le.fit_transform(data["PaymentMethod"])
+data["Churn"]=le.fit_transform(data["Churn"])
+ 
+from sklearn.preprocessing import OneHotEncoder
+
+one=OneHotEncoder()
+
+a=one.fit_transform(x[:,6:7]).toarray()
+b=one.fit_transform(x[:,7:8]).toarray()
+c=one.fit_transform(x[:,8:9]).toarray()
+d=one.fit_transform(x[:,9:10).toarray()
+e=one.fit_transform(x[:,10:11]).toarray()
+f=one.fit_transform(x[:,11:12]).toarray()
+g=one.fit_transform(x[:,12:13]).toarray()
+h=one.fit_transform(x[:,13:14]).toarray()
+i=one.fit_transform(x[:,14:15]).toarray()
+j=one.fit_transform(x[:,16:17]).toarray()
+x=np.delete(x,[6,7,8,9,10,11,12,13,14,16],axis=1)
+x=np.concatenate((a,b,c,d,e,f,g,h,i,j,x),axis=1)
+
+    Handling Imblance Data
+
+from imblearn.over_simpling import SMOTES
+
+SMT =	SMOTE()
+x_resample,y_resample=smt.fit_resample(x,y)
+
+x_resample
+
+y_resample
+
+x.shape,x_resample.shape
+
+
+              EXPLORATORY DATA ANALYSIS
+              
+    Descriptive Statistical
+    
+data.describe()
+
+    Univariate Analysis
+    
+ plt.figure(figsize=(12,5))
+ plt.subplot(1,2,1)
+ sns.distplot(data["tenure"])
+ plt.subplot(1,2,2)
+ sns.distplot(data["monthlycharges"])
+ 
+ plt.figure(figsize=(12,5))
+ plt.subplot(1,2,1)
+ sns.countplot(data["gender"])
+ plt.subplot(1,2,2)
+ sns.countplot(data["dependents"])
+ 
+    Bivariate Analysis
+    
+sns.barplot(x="churn",y="monthlycharges",data=data)
+
+    Multivariate Analysis
+    
+sns.heatmap(data.corr(), annot=True)
+
+sns.pairplot(data=data,markers=["^","v"],palette="inferno")
+
+from sklearn.model_selection imnport train_test_split
+x_train,x_test,y_train,y_test=train_test-split(x_resmaple,y_resample,test size=0.2,random state=0)
+
+from sklearn.preprocessing standardscaler
+sc=standardscaler()
+x_train=sc.fit_transform(x_train)
+x_test=sc.fit_transform(x_test)
+
+x_train.shape
+
+    MODEL BUILDING
+  
+  Logistic Regression Model
+  
+#importing and building the Decision tree model1
+def logreg(x_train,x_test,y_train,y_test):
+lr=logisticRegression(random_state=0)
+lr.fit(x_train,y_train)
+y_lr_tr=lr.predict(x_train)
+print(accuracy_score(y_lr_tr,y_train))
+ypred_lr=lr.predict(x_test)
+print(accuracy_score(ypred_lr,y_test))
+print("***Logistic Regression***")
+print("Confusion_Matrix")
+print(confusion_matrix(y_test,ypred_lr))
+print("Classification Report")
+print(classification_report(y_test,Ypred_lr))
+
+#printing the train accuracy and test accuracy respectively
+logreg(x_train,x_test,y_train,y_test)
+
+   Decision Tree Model
+   
+#importing the building the decision tree model
+def decisiontree(x_train,x_test,y_train,y_test):
+  dtc=Decisiontreeclassifier(criterion="entropy",random_state=0)
+  dtc.fit(x_train,y_train)
+  y_dt_tr=dtc.predict(x_train,y_train)
+  print(accuracy_score(ypred_dt,y_test))
+  ypred_dt=dtc.predict(x_test)
+  print(accuracy_score(ypred_dt,y_test))
+  print("***Decision Tree***")
+  print("Confusion_Matrix")
+  print(confusion_matrix(y_test,ypred_dt))
+  print("Classification Reportr")
+  print(classification_report(y_test,ypred_dt))
+  
+#printing the train accuracy and test accuracy respectively
+decisionTree(x_train,x_test,y_train,y_test)
+
+  Random Forest Model
+  
+def RandomForest(x_train,x_test,y_train,y_test):
+  rf=RandomForestClassifier(critertion="entropy",n_estimators=0,random_state=0)
+  rf.fix(x_train,y_train)
+  y_rf_tr=rf.predict(x_train)
+  print(accuracy_score(y_rf_tr,y_train))
+  ypred_rf=rf.predict(x_test)
+  print(accuracy_score(ypred_rf,y_test))
+  print("***Random Forest***")
+  print("Confusion_Matrix")
+  print(confusion_matrix(y_test,ypred_rf))
+  print("Classificatin Report")
+  print(classification_report(y_test,ypred_rf)
+  
+#printing the train accuracy and test accuracy respectively
+RandomForest(x_train,x_test,y_train,y_test)
+
+   KNN Model
+   
+#importing and building the KNN model
+def KNN(x_train,x_test,y_train,y_test)
+  Knn=KNeighborsclassifier()
+  knn.fit(x_train,y_train)
+  y_knn_tr=knn.predict(x_train)
+  print(accuracy_scroe(y_knn_tr,y_train))
+  ypred_knn=knn.predict(x_train)
+  print(accuracy_scroe(ypred_knn,y_test))
+  print("***KNN***")
+  print("Confusion_Matrix")
+  print(confusion_matrix(y_test,Ypred_knn))
+  print("Classification Report")
+  print(classification_report(y_test,ypred_knn))
+  
+#printing the train accuracy and test accuracy respectively
+KNN(x_train,x_test,y_train,y_test) 
+
+    SVM Model
+#importing and building the random forest model
+def svm(x_train,x_test,y_train,y_test)
+    svm=SVC(Kernel="linear")
+    svm.fit(x_train,y_test)
+    y_svm_tr=svm.predict(x_train)
+    print(accuracy_score(y_svm_tr,y_train))
+    ypred_svm=svm.predict(x_test)  
+    print(accuracy_score(ypred_svm,y_test)
+    print("***Support Vector Machine ***")
+    print("Coufusion_Matrix")
+    print(confusion_matrix(y_test,ypred_svm))
+    print("Classification Report")
+    print(clasification_report(Y_test,ypred_svm))
+    
+#printing the train accuracy and test accuracy respestively
+svm(x_train,x_test,y_train,y_test)
+
+   ANN Model
+   
+[ ] #Importing the keras libaries and packages
+    import keras
+    from keras.models import sequential
+    from keras.layers import Dense
+    
+[ ]#Initialising the ANN
+   classifier=sequential()
+   
+[ ]#Adding the input layer and the first hidden layer    
+   classifier.add(Dense(units=30,activation='relu',input_dim=40))
+   
+[ ]#Adding the second hiding layer
+   classifier.add(Dense(units=30,actication='relu'))
+   
+[ ]#Adding the output layer
+   classifier.add(Dense(units=1,actication='sigmoid'))
+   
+[ ]#Compiling the ANN
+   classifier.compile (optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
+  
+  #Fiting the ann to the traing set
+model_history=classifier.fit(x_train,y_train,batch_size=10,validation_split=0,33,epochs=200)
+
+print(accuracy_scroe(ann_pred,y_test))
+prtint("***ANN Model***")
+print("Confusion_Matrix")
+print(confusion_matrix(y_test,ann_pred))
+print("Classification Report")
+print(classification_report(y_test,ann_pred))
+
+     Testing The Model 
+     
+#testing on random input values
+lr=LogisticRegression(random_state=0)
+lr.fit(x_train,y_train)
+print("predicting on random input")
+lr_pred_own=lr.predict(sc.transform([[0,0,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,456,1,0,3245,4567]]))
+print("output is:"lr_pred_own)
+
+#testing on random input value
+dtc=DecisionTreeClassifier(criterion="entropy",random_state=0)
+dtc.fit(x_train,y_train)
+print("predicting on random input")
+dtc_pred_own=dtc.predict(sc.transform([[0,0,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,456,1,0,3245,4567]]))
+print("output is:"dtc_pred_own)
+
+#testing on random input value
+svc=SVC(kernel="linear")
+svc.fit(x_train,y_train)
+print("predicting on random input")
+svc_pred_own=svc.predict(sc.transform([[0,0,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,456,1,0,3245,4567]]))
+print("output is:"svc_pred_own)
+
+#testing on random input value
+Knn=KNigborsClassifier()
+knn.fit(x_train,y_train)
+print("predicting on random input")
+knn_pred_own=knn.predict(sc.transform([[0,0,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,456,1,0,3245,4567]]))
+print("output is:"knn_pred_own)
+
+#testing on random input value
+print("predicting on random input")
+ann_pred_own=ann.predict(sc.transform([[0,0,1,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,456,1,0,3245,4567]]))
+prtint(ann_pred_own)
+ann_pred_own=(ann_pred_own>0.5)
+print("output is:"ann_pred_own)
